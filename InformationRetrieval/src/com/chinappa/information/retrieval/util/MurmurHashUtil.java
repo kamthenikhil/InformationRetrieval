@@ -1,8 +1,8 @@
-package com.chinappa.information.retrieval.algorithm;
+package com.chinappa.information.retrieval.util;
 
 import java.nio.charset.Charset;
 
-public class MurmurHash {
+public class MurmurHashUtil {
 
 	public static int hash32(String doc) {
 		byte[] buffer = doc.getBytes(Charset.forName("utf-8"));
