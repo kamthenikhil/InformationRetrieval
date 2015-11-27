@@ -30,7 +30,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.chinappa.information.retrieval.constant.CommonConstants;
-import com.chinappa.information.retrieval.constant.CrawlerConstants;
 
 public class FileHandlerUtil {
 
@@ -108,7 +107,7 @@ public class FileHandlerUtil {
 		try {
 			output = new FileOutputStream(file);
 			writer = new OutputStreamWriter(new GZIPOutputStream(output),
-					CrawlerConstants.ENCODING_CHARSET);
+					CommonConstants.ENCODING_CHARSET);
 			writer.write(data);
 			writer.flush();
 		} catch (IOException e) {
@@ -137,7 +136,7 @@ public class FileHandlerUtil {
 		try {
 			input = new FileInputStream(file);
 			reader = new InputStreamReader(new GZIPInputStream(input),
-					CrawlerConstants.ENCODING_CHARSET);
+					CommonConstants.ENCODING_CHARSET);
 			int data = reader.read();
 			while (data != -1) {
 				decompressedData.append((char) data);
@@ -241,15 +240,8 @@ public class FileHandlerUtil {
 	 */
 	public static String fetchDocumentText(Document doc) {
 
-		Elements paragraphs = doc.select(CrawlerConstants.HTML_PARAGRAPHS);
+		Elements paragraphs = doc.select(CommonConstants.HTML_PARAGRAPHS);
 		StringBuilder documentText = new StringBuilder();
-		if (paragraphs != null && paragraphs.size() > 0) {
-			for (Element paragraph : paragraphs) {
-				documentText.append(paragraph.text());
-				documentText.append(CommonConstants.SPACE);
-			}
-		}
-		paragraphs = doc.select(CrawlerConstants.HTML_LINKS_HREF);
 		if (paragraphs != null && paragraphs.size() > 0) {
 			for (Element paragraph : paragraphs) {
 				documentText.append(paragraph.text());
@@ -258,27 +250,40 @@ public class FileHandlerUtil {
 		}
 		return documentText.toString();
 	}
+	
+	public static String fetchAnchorText(Document doc) {
+
+		Elements paragraphs = doc.select(CommonConstants.HTML_LINKS_HREF);
+		StringBuilder anchorText = new StringBuilder();
+		if (paragraphs != null && paragraphs.size() > 0) {
+			for (Element paragraph : paragraphs) {
+				anchorText.append(paragraph.text());
+				anchorText.append(CommonConstants.SPACE);
+			}
+		}
+		return anchorText.toString();
+	}
 
 	/**
-	 * The following method extracts the metadata content from the document.
+	 * The following method extracts the metadata content corresponding to
+	 * specific named fields from the document.
 	 * 
 	 * @param doc
 	 * @return
 	 */
 	public static String fetchDocumentMetadata(Document doc, String field) {
 
-		Elements elements = doc.select(CrawlerConstants.HTML_META_CONTENT);
+		Elements elements = doc.select(CommonConstants.HTML_META_CONTENT);
 		StringBuilder metadataContent = new StringBuilder();
 		if (elements != null && elements.size() > 0) {
 			for (Element element : elements) {
-				if(element
-						.attr(CrawlerConstants.CONTENT_FIELD))
-				metadataContent.append(element
-						.attr(CrawlerConstants.CONTENT_FIELD));
-				metadataContent.append(CommonConstants.SPACE);
+				if (element.attr(field) != null) {
+					metadataContent.append(element
+							.attr(CommonConstants.CONTENT_FIELD));
+					metadataContent.append(CommonConstants.SPACE);
+				}
 			}
 		}
-		// System.out.println(metadataContent);
 		return metadataContent.toString();
 	}
 
@@ -290,7 +295,8 @@ public class FileHandlerUtil {
 	 * @param param
 	 * @return
 	 */
-	public static Long readLongFromResourceBundle(ResourceBundle rb, String param) {
+	public static Long readLongFromResourceBundle(ResourceBundle rb,
+			String param) {
 		Long variable = null;
 		try {
 			String temp = rb.getString(param);
@@ -355,7 +361,8 @@ public class FileHandlerUtil {
 	 * @param param
 	 * @return
 	 */
-	public static String readStringFromResourceBundle(ResourceBundle rb, String param) {
+	public static String readStringFromResourceBundle(ResourceBundle rb,
+			String param) {
 
 		String variable = null;
 		try {
