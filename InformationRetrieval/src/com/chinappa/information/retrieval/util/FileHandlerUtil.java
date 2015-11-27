@@ -19,7 +19,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -256,24 +258,161 @@ public class FileHandlerUtil {
 		}
 		return documentText.toString();
 	}
-	
+
 	/**
 	 * The following method extracts the metadata content from the document.
 	 * 
 	 * @param doc
 	 * @return
 	 */
-	public static String fetchDocumentMetadata(Document doc) {
+	public static String fetchDocumentMetadata(Document doc, String field) {
 
 		Elements elements = doc.select(CrawlerConstants.HTML_META_CONTENT);
 		StringBuilder metadataContent = new StringBuilder();
 		if (elements != null && elements.size() > 0) {
 			for (Element element : elements) {
-				metadataContent.append(element.attr(CrawlerConstants.CONTENT_FIELD));
+				if(element
+						.attr(CrawlerConstants.CONTENT_FIELD))
+				metadataContent.append(element
+						.attr(CrawlerConstants.CONTENT_FIELD));
 				metadataContent.append(CommonConstants.SPACE);
 			}
 		}
-		//System.out.println(metadataContent);
+		// System.out.println(metadataContent);
 		return metadataContent.toString();
+	}
+
+	/**
+	 * The following method reads the property file and returns corresponding
+	 * {@link Long} value.
+	 * 
+	 * @param rb
+	 * @param param
+	 * @return
+	 */
+	public static Long readLongFromResourceBundle(ResourceBundle rb, String param) {
+		Long variable = null;
+		try {
+			String temp = rb.getString(param);
+			if (temp != null) {
+				if (!temp.trim().isEmpty()) {
+					try {
+						variable = Long.parseLong(temp);
+						return variable;
+					} catch (IllegalArgumentException e) {
+						showInfoMessage(param);
+					}
+				} else {
+					showInfoMessage(param);
+				}
+			} else {
+				showInfoMessage(param);
+			}
+		} catch (MissingResourceException e) {
+			showInfoMessage(param);
+		}
+		return variable;
+	}
+
+	/**
+	 * The following method reads the property file and returns corresponding
+	 * {@link Integer} value.
+	 * 
+	 * @param rb
+	 * @param param
+	 * @return
+	 */
+	public static Integer readIntegerFromResourceBundle(ResourceBundle rb,
+			String param) {
+		Integer variable = null;
+		try {
+			String temp = rb.getString(param);
+			if (temp != null) {
+				if (!temp.trim().isEmpty()) {
+					try {
+						variable = Integer.parseInt(temp);
+						return variable;
+					} catch (IllegalArgumentException e) {
+						showInfoMessage(param);
+					}
+				} else {
+					showInfoMessage(param);
+				}
+			} else {
+				showInfoMessage(param);
+			}
+		} catch (MissingResourceException e) {
+			showInfoMessage(param);
+		}
+		return variable;
+	}
+
+	/**
+	 * The following method reads the property file and returns corresponding
+	 * {@link String} value.
+	 * 
+	 * @param rb
+	 * @param param
+	 * @return
+	 */
+	public static String readStringFromResourceBundle(ResourceBundle rb, String param) {
+
+		String variable = null;
+		try {
+			String temp = rb.getString(param);
+			if (temp != null) {
+				if (!temp.trim().isEmpty()) {
+					variable = temp;
+					return variable;
+				} else {
+					showInfoMessage(param);
+				}
+			} else {
+				showInfoMessage(param);
+			}
+		} catch (MissingResourceException e) {
+			showInfoMessage(param);
+		}
+		return variable;
+	}
+
+	/**
+	 * The following method reads the property file and returns corresponding
+	 * {@link Boolean} value.
+	 * 
+	 * @param rb
+	 * @param param
+	 * @return
+	 */
+	public static Boolean readBooleanFromResourceBundle(ResourceBundle rb,
+			String param) {
+
+		Boolean variable = null;
+		try {
+			String temp = rb.getString(param);
+			if (temp != null) {
+				if (!temp.trim().isEmpty()) {
+					variable = Boolean.parseBoolean(temp);
+				} else {
+					showInfoMessage(param);
+				}
+			} else {
+				showInfoMessage(param);
+			}
+		} catch (MissingResourceException e) {
+			showInfoMessage(param);
+		}
+		return variable;
+	}
+
+	/**
+	 * The following method is used to display messages for information purpose
+	 * only.
+	 * 
+	 * @param param
+	 */
+	private static void showInfoMessage(String param) {
+		System.out.println("Incorrect value found for " + param + " parameter");
+		System.out.println("Setting it to dafault value..");
 	}
 }

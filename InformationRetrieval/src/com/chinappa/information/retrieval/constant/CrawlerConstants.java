@@ -13,6 +13,10 @@ public class CrawlerConstants {
 	public static final String HTML_LINKS_HREF = "a[href]";
 	
 	public static final String HTML_META_CONTENT = "meta[content]";
+	
+	public static final String HTML_META_DESCRIPTION = "description";
+	
+	public static final String HTML_META_KEYWORDS = "keywords";
 
 	public static final String HTML_HREF = "href";
 
