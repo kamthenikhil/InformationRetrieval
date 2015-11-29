@@ -188,15 +188,22 @@ public class FileHandlerUtil {
 		}
 	}
 
-	public static void writeIntoPropertiesFile(Map<String, String> map,
-			String directory, String fileName) {
+	public static void writeIntoPropertiesFile(Map map, String directory,
+			String fileName) {
 		Properties prop = new Properties();
 		OutputStream output = null;
 		try {
 			output = new FileOutputStream(directory + File.separator + fileName);
-			for (String key : map.keySet()) {
-				if (!map.get(key).isEmpty()) {
-					prop.setProperty(key, map.get(key));
+			for (Object object : map.keySet()) {
+				String key = (String) object;
+
+				if (map.get(key) instanceof String) {
+					String value = (String) map.get(key);
+					if (!value.isEmpty()) {
+						prop.setProperty(key, value);
+					}
+				} else if (map.get(key) instanceof Float) {
+					prop.setProperty(key, Float.toString((Float) map.get(key)));
 				}
 			}
 			prop.store(output, null);
@@ -250,7 +257,7 @@ public class FileHandlerUtil {
 		}
 		return documentText.toString();
 	}
-	
+
 	public static String fetchAnchorText(Document doc) {
 
 		Elements paragraphs = doc.select(CommonConstants.HTML_LINKS_HREF);
@@ -277,7 +284,7 @@ public class FileHandlerUtil {
 		StringBuilder metadataContent = new StringBuilder();
 		if (elements != null && elements.size() > 0) {
 			for (Element element : elements) {
-				if (element.attr(field) != null) {
+				if (element.attr(CommonConstants.NAME_FIELD).equals(field)) {
 					metadataContent.append(element
 							.attr(CommonConstants.CONTENT_FIELD));
 					metadataContent.append(CommonConstants.SPACE);
