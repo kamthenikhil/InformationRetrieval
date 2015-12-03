@@ -125,6 +125,35 @@ public class FileHandlerUtil {
 			}
 		}
 	}
+	
+	public static String fetchFromHTMLFile(String outputDirectory,
+			String fileName) {
+
+		File file = new File(outputDirectory + File.separator + fileName);
+		FileInputStream input = null;
+		Reader reader = null;
+		StringBuilder htmlData = new StringBuilder();
+		try {
+			input = new FileInputStream(file);
+			reader = new InputStreamReader(input);
+			int data = reader.read();
+			while (data != -1) {
+				htmlData.append((char) data);
+				data = reader.read();
+			}
+		} catch (IOException e) {
+
+		} finally {
+			try {
+				if (reader != null)
+					reader.close();
+				if (input != null)
+					input.close();
+			} catch (IOException e) {
+			}
+		}
+		return htmlData.toString();
+	}
 
 	public static String fetchFromCompressedHTMLFile(String outputDirectory,
 			String fileName) {

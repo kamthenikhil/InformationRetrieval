@@ -13,6 +13,7 @@ public class CommonConstants {
 	public static final String NEW_LINE = "\n";
 
 	public static final String DEFAULT_MAPPINGS_FILENAME = "mappings.properties";
+	public static final String DEFAULT_PAGERANK_FILENAME = "pageRanks.properties";
 	public static final String ENCODING_CHARSET = "UTF-8";
 
 	public static final String HTML_LINKS_HREF = "a[href]";
